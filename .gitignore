@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+env/
+
+# uv
+.uv/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pytest
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ruff
+.ruff_cache/
+
+# Node / frontend
+node_modules/
+dist/
+.parcel-cache/
+frontend/dist/
+frontend/node_modules/
+
+# Env / secrets
+.env
+*.env
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+
+# Data (raw can be large)
+data/raw/*.json
+data/raw/*.csv
+# keep processed parquet committed
+# data/processed/
+
+# AGENT.md (do not include in repo)
+AGENT.md
