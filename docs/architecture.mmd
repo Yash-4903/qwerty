@@ -1,0 +1,48 @@
+flowchart TD
+    subgraph Ext["External Data Source"]
+        BMRS["Elexon BMRS API\n(datasets/FUELHH/stream & WINDFOR/stream)"]
+    end
+
+    subgraph Ingestion["Data Ingestion Pipeline (app/ingestion)"]
+        Client["ElexonClient\n(Chunked HTTPX with retries)"]
+        Norm["Normalization & Validation\n(validate.py & fetch_data.py)"]
+        Raw["Raw JSON Cache\n(data/raw/)"]
+        Parquet["Committed Parquet Storage\n(data/processed/)"]
+    end
+
+    subgraph Backend["FastAPI Backend (app/)"]
+        Repo["DataRepository\n(In-memory DataFrames indexed by time)"]
+        Cutoff["Domain Cutoff Logic\n(app/domain/cutoff.py)"]
+        Metrics["Domain Metrics Engine\n(app/domain/metrics.py)"]
+        Decision["Domain Decision Engine\n(app/domain/decision.py)"]
+        Services["Orchestration Services\n(forecast_service.py & metrics_service.py)"]
+        Router["FastAPI REST Router\n(/api/v1/forecast, /metrics, /meta, /export.csv)"]
+    end
+
+    subgraph Frontend["React 18 SPA (frontend/src/)"]
+        Query["TanStack Query Cache"]
+        Dashboard["DashboardPage"]
+        Callout["DecisionSummary Callout"]
+        KPIs["KpiGrid & Cards"]
+        MainChart["ForecastVsActualChart (Recharts)"]
+        Tabs["Accuracy Diagnostics Tabs"]
+        Table["Paginated DataTable & CSV Export"]
+    end
+
+    BMRS --> Client
+    Client --> Raw
+    Client --> Norm
+    Norm --> Parquet
+    Parquet --> Repo
+    Repo --> Services
+    Cutoff --> Services
+    Metrics --> Services
+    Decision --> Services
+    Services --> Router
+    Router --> Query
+    Query --> Dashboard
+    Dashboard --> Callout
+    Dashboard --> KPIs
+    Dashboard --> MainChart
+    Dashboard --> Tabs
+    Dashboard --> Table
